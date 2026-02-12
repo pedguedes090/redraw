@@ -151,7 +151,7 @@ class TestCLI:
                 cwd=ROOT_DIR,
                 capture_output=True,
                 text=True,
-                timeout=120,
+                timeout=60,
             )
             assert result.returncode == 0, f"CLI failed: {result.stderr}"
             assert os.path.exists(out_path), "Output file not created"

@@ -1,6 +1,6 @@
 """
 CLI entrypoint for inpainting.
-Usage: python -m cli.inpaint --image input.jpg --mask mask.png --out output.png --seed 123
+Usage: python -m cli.inpaint --mode aot --image input.jpg --mask mask.png --output output.png --seed 123
 """
 import os
 import sys

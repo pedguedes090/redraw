@@ -37,7 +37,7 @@ class ScreenVAE(nn.Module):
                     net = net.module
                 print('loading the model from %s' % load_path)
                 state_dict = torch.load(
-                    load_path, map_location=lambda storage, loc: storage.cuda())
+                    load_path, map_location='cpu', weights_only=True)
                 if hasattr(state_dict, '_metadata'):
                     del state_dict._metadata
 
@@ -159,7 +159,7 @@ class LayerNormWarpper(nn.Module):
         self.num_features = int(num_features)
 
     def forward(self, x):
-        x = nn.LayerNorm([self.num_features, x.size()[2], x.size()[3]], elementwise_affine=False).cuda()(x)
+        x = nn.LayerNorm([self.num_features, x.size()[2], x.size()[3]], elementwise_affine=False).to(x.device)(x)
         return x
 
 def get_non_linearity(layer_type='relu'):

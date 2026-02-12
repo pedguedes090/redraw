@@ -111,7 +111,7 @@ def run_manga_inpainting(args):
         else:
             line = np.ones_like(image) * 255
 
-        result = manga_inpainter.inpaint(image, line, mask)
+        result = inpainter.inpaint(image, line, mask)
 
         # Determine output path
         if os.path.isdir(args.output) or len(image_paths) > 1:
@@ -158,8 +158,17 @@ Examples:
                         help="[AOT mode] Path to pre-trained AOT-GAN model (.pt)")
     parser.add_argument("--checkpoint", type=str, default=None,
                         help="[Manga mode] Path to MangaInpainting checkpoint directory")
+    parser.add_argument("--seed", type=int, default=None,
+                        help="Random seed for reproducible results")
 
     args = parser.parse_args()
+
+    # Set random seed for reproducibility
+    if args.seed is not None:
+        torch.manual_seed(args.seed)
+        np.random.seed(args.seed)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(args.seed)
 
     if args.mode == "aot":
         if args.model is None:

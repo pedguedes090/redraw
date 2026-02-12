@@ -218,7 +218,7 @@ manga_inpainter = MangaInpainter()
 # ===== Gradio Interface Functions =====
 
 def find_aot_model():
-    """Auto-detect AOT-GAN model path"""
+    """Auto-detect AOT-GAN generator model path (files starting with 'G')"""
     search_dirs = [
         os.path.join(ROOT_DIR, "checkpoints", "aot_gan"),
         os.path.join(ROOT_DIR, "aot_gan", "experiments"),
@@ -226,8 +226,8 @@ def find_aot_model():
     for d in search_dirs:
         if os.path.isdir(d):
             for root, dirs, files in os.walk(d):
-                for f in files:
-                    if f.endswith(".pt"):
+                for f in sorted(files):
+                    if f.startswith("G") and f.endswith(".pt"):
                         return os.path.join(root, f)
     return None
 
@@ -404,11 +404,7 @@ def inpaint_manga_files(image, line, mask):
 
 # ===== Build Gradio UI =====
 def create_ui():
-    with gr.Blocks(title="Redraw - Unified Inpainting Tool", theme=gr.themes.Soft(),
-                   css="""
-                   .editor-container { min-height: 500px; }
-                   .how-to { background: #f0f7ff; padding: 12px 16px; border-radius: 8px; margin-bottom: 8px; }
-                   """) as app:
+    with gr.Blocks(title="Redraw - Unified Inpainting Tool") as app:
         gr.Markdown("""
         # 🎨 Redraw - Unified Image Inpainting Tool
         Combines **AOT-GAN** (natural image) and **MangaInpainting** (manga/comic) into one tool.
@@ -610,5 +606,10 @@ if __name__ == "__main__":
         server_name="0.0.0.0",
         server_port=7860,
         share=False,
-        inbrowser=True
+        inbrowser=True,
+        theme=gr.themes.Soft(),
+        css="""
+        .editor-container { min-height: 500px; }
+        .how-to { background: #f0f7ff; padding: 12px 16px; border-radius: 8px; margin-bottom: 8px; }
+        """,
     )

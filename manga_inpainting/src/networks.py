@@ -572,9 +572,7 @@ class LayerNormWrapper(nn.Module):
         self.num_features = int(num_features)
 
     def forward(self, x):
-        #y = x.to(torch.float32)
-        # x = nn.LayerNorm([self.num_features, x.size()[2], x.size()[3]]).cuda()(x)#.to(x.dtype)
-        x = nn.LayerNorm([self.num_features, x.size()[2], x.size()[3]], elementwise_affine=False).cuda()(x)
+        x = nn.LayerNorm([self.num_features, x.size()[2], x.size()[3]], elementwise_affine=False).to(x.device)(x)
         return x
 
 
